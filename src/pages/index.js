@@ -1,8 +1,10 @@
 // src/pages/index.js
+import { useState, useEffect } from 'react'
 import BlogSection from './components/BlogSection'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import HeaderMobile from './components/HeaderMobile'
 import Hero from './components/Hero'
 import Mission from './components/Mission'
 import RecentWorks from './components/RecentWorks'
@@ -11,20 +13,36 @@ import Testimonials from './components/Testimonials'
 import TrustedBy from './components/TrustedBy'
 
 export default function HomePage() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Funzione per controllare la dimensione della finestra
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768) // imposta breakpoint mobile a 768px
+    }
+
+    // Esegui il controllo iniziale
+    handleResize()
+    // Aggiungi l'evento resize
+    window.addEventListener('resize', handleResize)
+    // Pulizia dell'evento al unmount del componente
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <>
-      <Header />
+      {isMobile ? <HeaderMobile /> : <Header />}
       <main>
         <Hero />
         {/* Altri contenuti della pagina */}
-      <Services />
-      <TrustedBy />
-     <Mission />
-      <CallToAction />
-      <RecentWorks />
-     <Testimonials />
-      <BlogSection />
-      <Footer />
+        <Services />
+        <TrustedBy />
+        <Mission />
+        <CallToAction />
+        <RecentWorks />
+        <Testimonials />
+        <BlogSection />
+        <Footer />
       </main>
     </>
   )

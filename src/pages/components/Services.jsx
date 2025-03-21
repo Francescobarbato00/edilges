@@ -1,7 +1,36 @@
 // src/components/Services.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Services() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Stili condizionali per header
+  const headerTitleStyle = {
+    fontFamily: 'Thicccboi, sans-serif',
+    fontWeight: 500,
+    fontSize: isMobile ? '32px' : '58px',
+    lineHeight: isMobile ? '40px' : '65px',
+    margin: 0
+  }
+
+  // Stile per il grid dei servizi
+  const gridStyle = {
+    maxWidth: '1340px',
+    margin: '2rem auto 0',
+    padding: '0 1rem',
+    display: 'grid',
+    gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+    columnGap: '2rem',
+    rowGap: '2rem'
+  }
+
   return (
     <section style={{ backgroundColor: '#f8f9fb', padding: '4rem 0' }}>
       {/* Testata: "OUR SERVICES", Titolo e Link a destra */}
@@ -31,15 +60,7 @@ export default function Services() {
           >
             OUR SERVICES
           </p>
-          <h2
-            style={{
-              fontFamily: 'Thicccboi, sans-serif',
-              fontWeight: 500,
-              fontSize: '58px',
-              lineHeight: '65px',
-              margin: 0
-            }}
-          >
+          <h2 style={headerTitleStyle}>
             A comprehensive <br />
             set of <span style={{ color: '#0072F5' }}>services</span>
           </h2>
@@ -74,32 +95,25 @@ export default function Services() {
       </div>
 
       {/* Elenco servizi in due righe da tre colonne */}
-      <div
-        style={{
-          maxWidth: '1340px',
-          margin: '2rem auto 0',
-          padding: '0 1rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',  // 3 colonne
-          columnGap: '2rem',                      // spazio orizzontale
-          rowGap: '2rem'                          // spazio verticale
-        }}
-      >
+      <div style={gridStyle}>
         {/* Riga 1 */}
         <ServiceItem
           number="01"
           title="Remodel construction"
           text="Velit sagittis fringilla neque dolor id et ac eu mattis ipsum morbi est morbi enim."
+          isMobile={isMobile}
         />
         <ServiceItem
           number="02"
           title="General contracting"
           text="Phasellus orci nullam orci ultrices vulputate at sodales tempor malesuada libero."
+          isMobile={isMobile}
         />
         <ServiceItem
           number="03"
           title="Project planning"
           text="Egestas integer sollicitudin volutpat duis mauris pulvinar molestie neque nibh."
+          isMobile={isMobile}
         />
 
         {/* Riga 2 */}
@@ -107,16 +121,19 @@ export default function Services() {
           number="04"
           title="Space planning"
           text="Eget vitae non habitant blandit in in eu pellentesque nulla facilisis leo donec."
+          isMobile={isMobile}
         />
         <ServiceItem
           number="05"
           title="Exterior design"
           text="Sed massa morbi turpis enim sed suspendisse massa ut a ultrices ut nisi in tellus."
+          isMobile={isMobile}
         />
         <ServiceItem
           number="06"
           title="Interior design"
           text="Sed massa morbi turpis enim sed suspendisse massa ut a ultrices ut nisi in tellus."
+          isMobile={isMobile}
         />
       </div>
     </section>
@@ -128,26 +145,24 @@ export default function Services() {
  * - number: numero progressivo (es. "01", "02", ecc.)
  * - title: titolo (es. "Remodel construction")
  * - text: descrizione
+ * - isMobile: booleano per dimensione schermo
  */
-function ServiceItem({ number, title, text }) {
+function ServiceItem({ number, title, text, isMobile }) {
   const [hover, setHover] = useState(false)
 
   const containerStyle = {
-    // Bordo a sinistra SEMPRE presente
     borderLeft: `1px solid ${hover ? '#0072F5' : '#e0e0e0'}`,
     paddingLeft: '2rem',
     transition: 'border-color 0.3s',
-    // Per cambiare il cursore su hover
     cursor: 'pointer'
   }
 
   const titleStyle = {
     fontFamily: 'Thicccboi, sans-serif',
     fontWeight: 500,
-    fontSize: '48px',
-    lineHeight: '60px',
+    fontSize: isMobile ? '32px' : '48px',
+    lineHeight: isMobile ? '40px' : '60px',
     margin: '0 0 1rem',
-    // Colore e underline su hover
     color: hover ? '#0072F5' : '#171717',
     textDecoration: hover ? 'underline' : 'none',
     transition: 'color 0.3s, text-decoration 0.3s'
@@ -159,7 +174,7 @@ function ServiceItem({ number, title, text }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {/* Numero (22px) */}
+      {/* Numero */}
       <p
         style={{
           fontFamily: 'Thicccboi, sans-serif',
@@ -176,7 +191,7 @@ function ServiceItem({ number, title, text }) {
       {/* Titolo con hover blu e underline */}
       <h3 style={titleStyle}>{title}</h3>
 
-      {/* Testo (22px) */}
+      {/* Testo */}
       <p
         style={{
           fontFamily: 'Thicccboi, sans-serif',

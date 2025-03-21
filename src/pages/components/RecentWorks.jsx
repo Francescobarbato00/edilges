@@ -2,7 +2,7 @@
 import { useState } from 'react'
 
 export default function RecentWorks() {
-  // Elenco progetti di esempio (sostituisci immagini/titoli con i tuoi)
+  // Elenco progetti di esempio
   const projects = [
     {
       number: '01',
@@ -21,10 +21,8 @@ export default function RecentWorks() {
     }
   ]
 
-  // Stato per l’indice del progetto corrente
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Funzioni per cambiare progetto
   const handlePrev = () => {
     setCurrentIndex(prev => (prev + projects.length - 1) % projects.length)
   }
@@ -32,174 +30,165 @@ export default function RecentWorks() {
     setCurrentIndex(prev => (prev + 1) % projects.length)
   }
 
-  // Progetto attualmente visibile
   const currentProject = projects[currentIndex]
 
   return (
-    <section style={{ backgroundColor: '#f8f9fb', padding: '4rem 0' }}>
-      <div
-        style={{
-          maxWidth: '1340px',
-          margin: '0 auto',
-          padding: '0 1rem',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '2rem'
-        }}
-      >
-        {/* Colonna sinistra: titoli e link */}
-        <div style={{ flex: '1 1 400px', minWidth: '300px' }}>
-          <p
-            style={{
-              fontFamily: 'Thicccboi, sans-serif',
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: '20px',
-              margin: '0 0 0.5rem',
-              color: '#666'
-            }}
-          >
-            RECENT WORKS
-          </p>
-          <h2
-            style={{
-              fontFamily: 'Thicccboi, sans-serif',
-              fontWeight: 500,
-              fontSize: '58px',
-              lineHeight: '65px',
-              margin: '0 0 1.5rem'
-            }}
-          >
-            Take a look at <br /> our most recent{' '}
-            <span style={{ color: '#0072F5' }}>projects</span>
+    <section className="recent-works">
+      <div className="inner-container">
+        <div className="info-section">
+          <h4>RECENT WORKS</h4>
+          <h2>
+            Take a look at <br /> our most recent <span>projects</span>
           </h2>
-          <a
-            href="#"
-            style={{
-              fontFamily: 'Thicccboi, sans-serif',
-              fontWeight: 400,
-              fontSize: '16px',
-              lineHeight: '24px',
-              textDecoration: 'none',
-              color: '#171717'
-            }}
-          >
-            Browse portfolio →
-          </a>
+          <a href="#">Browse portfolio →</a>
         </div>
-
-        {/* Colonna destra: card immagine + frecce + testo sovrapposto */}
-        <div
-          style={{
-            flex: '1 1 400px',
-            minWidth: '300px',
-            position: 'relative'
-          }}
-        >
-          {/* Card con immagine di sfondo */}
+        <div className="card-section">
           <div
-            style={{
-              borderRadius: '1rem',
-              overflow: 'hidden',
-              position: 'relative',
-              width: '100%',
-              height: '500px', // Altezza fissa di esempio, modifica a piacere
-              backgroundImage: `url("${currentProject.image}")`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
+            className="card"
+            style={{ backgroundImage: `url(${currentProject.image})` }}
           >
-            {/* Overlay sfumato (opzionale) */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '50%',
-                background:
-                  'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%)'
-              }}
-            />
-
-            {/* Testo sovrapposto in basso */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '1rem',
-                left: '1rem',
-                color: '#fff'
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: 'Thicccboi, sans-serif',
-                  fontWeight: 500,
-                  fontSize: '22px',
-                  lineHeight: '33px',
-                  margin: '0 0 0.5rem',
-                  color: '#0072F5'
-                }}
-              >
-                {currentProject.number}
-              </p>
-              <h3
-                style={{
-                  fontFamily: 'Thicccboi, sans-serif',
-                  fontWeight: 400,
-                  fontSize: '24px',
-                  lineHeight: '30px',
-                  margin: 0
-                }}
-              >
-                {currentProject.title}
-              </h3>
+            <div className="overlay" />
+            <div className="card-text">
+              <span>{currentProject.number}</span>
+              <h3>{currentProject.title}</h3>
             </div>
           </div>
-
-          {/* Freccia sinistra */}
-          <button
-            onClick={handlePrev}
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '-2rem',
-              transform: 'translateY(-50%)',
-              width: '48px',
-              height: '48px',
-              borderRadius: '9999px',
-              border: 'none',
-              backgroundColor: '#0072F5',
-              color: '#fff',
-              fontSize: '20px',
-              cursor: 'pointer'
-            }}
-          >
-            ←
-          </button>
-
-          {/* Freccia destra */}
-          <button
-            onClick={handleNext}
-            style={{
-              position: 'absolute',
-              top: '50%',
-              right: '-2rem',
-              transform: 'translateY(-50%)',
-              width: '48px',
-              height: '48px',
-              borderRadius: '9999px',
-              border: 'none',
-              backgroundColor: '#0072F5',
-              color: '#fff',
-              fontSize: '20px',
-              cursor: 'pointer'
-            }}
-          >
-            →
-          </button>
+          <div className="arrows">
+            <button onClick={handlePrev} className="arrow-btn">
+              ←
+            </button>
+            <button onClick={handleNext} className="arrow-btn">
+              →
+            </button>
+          </div>
         </div>
       </div>
+      <style jsx>{`
+        .recent-works {
+          background-color: #f8f9fb;
+          padding: 4rem 1rem;
+        }
+        .inner-container {
+          max-width: 1340px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+        }
+        .info-section {
+          flex: 1;
+          min-width: 300px;
+        }
+        .info-section h4 {
+          font-family: 'Thicccboi', sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          color: #666;
+          margin-bottom: 0.5rem;
+        }
+        .info-section h2 {
+          font-family: 'Thicccboi', sans-serif;
+          font-size: 48px;
+          font-weight: 500;
+          line-height: 1.2;
+          margin-bottom: 1.5rem;
+        }
+        .info-section h2 span {
+          color: #0072f5;
+        }
+        .info-section a {
+          font-family: 'Thicccboi', sans-serif;
+          font-size: 16px;
+          color: #171717;
+          text-decoration: none;
+        }
+        .card-section {
+          flex: 1;
+          min-width: 300px;
+          display: flex;
+          flex-direction: column;
+        }
+        .card {
+          position: relative;
+          height: 500px;
+          background-size: cover;
+          background-position: center;
+          border-radius: 1rem;
+          overflow: hidden;
+        }
+        .overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 50%;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.6) 100%
+          );
+        }
+        .card-text {
+          position: absolute;
+          bottom: 1rem;
+          left: 1rem;
+          color: #fff;
+        }
+        .card-text span {
+          font-family: 'Thicccboi', sans-serif;
+          font-size: 22px;
+          font-weight: 500;
+          color: #0072f5;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+        .card-text h3 {
+          font-family: 'Thicccboi', sans-serif;
+          font-size: 24px;
+          font-weight: 400;
+          margin: 0;
+        }
+        .arrows {
+          margin-top: 1rem;
+          display: flex;
+          justify-content: space-between;
+        }
+        .arrow-btn {
+          background-color: #0072f5;
+          border: none;
+          color: #fff;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          font-size: 20px;
+          cursor: pointer;
+        }
+        @media (max-width: 768px) {
+          .inner-container {
+            flex-direction: column;
+            align-items: center;
+          }
+          .info-section {
+            text-align: center;
+          }
+          .info-section h2 {
+            font-size: 36px;
+          }
+          .card {
+            height: 300px;
+          }
+          .arrow-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+          }
+          .arrows {
+            width: 100%;
+            justify-content: space-around;
+          }
+        }
+      `}</style>
     </section>
   )
 }

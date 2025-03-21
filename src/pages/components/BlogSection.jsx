@@ -1,87 +1,116 @@
 // src/components/BlogSection.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function BlogSection() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Sezione: padding ridotto su mobile
+  const sectionStyle = {
+    backgroundColor: '#f8f9fb',
+    padding: isMobile ? '2rem 0' : '4rem 0'
+  }
+
+  const wrapperStyle = {
+    maxWidth: '1340px',
+    margin: '0 auto',
+    padding: '0 1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem'
+  }
+
+  // Header: titoli e link; centrato su mobile
+  const headerStyle = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: isMobile ? 'center' : 'space-between',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    textAlign: isMobile ? 'center' : 'left'
+  }
+
+  const leftColStyle = {
+    flex: '1 1 500px',
+    minWidth: '300px'
+  }
+
+  const labelStyle = {
+    fontFamily: 'Thicccboi, sans-serif',
+    fontWeight: 600,
+    fontSize: '16px',
+    lineHeight: '20px',
+    margin: '0 0 0.5rem',
+    color: '#666'
+  }
+
+  const titleStyle = {
+    fontFamily: 'Thicccboi, sans-serif',
+    fontWeight: 500,
+    fontSize: isMobile ? '36px' : '58px',
+    lineHeight: isMobile ? '42px' : '65px',
+    margin: 0
+  }
+
+  const rightColStyle = {
+    flex: '0 0 auto'
+  }
+
+  const linkStyle = {
+    fontFamily: 'Thicccboi, sans-serif',
+    fontWeight: 400,
+    fontSize: '16px',
+    lineHeight: '24px',
+    textDecoration: 'none',
+    color: '#171717'
+  }
+
+  // Sezione card: su desktop usiamo due colonne (1.2fr e 1fr); su mobile, una sola colonna
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
+    gap: '1.5rem'
+  }
+
   return (
-    <section style={{ backgroundColor: '#f8f9fb', padding: '4rem 0' }}>
-      <div
-        style={{
-          maxWidth: '1340px',
-          margin: '0 auto',
-          padding: '0 1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem'
-        }}
-      >
+    <section style={sectionStyle}>
+      <div style={wrapperStyle}>
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem'
-          }}
-        >
-          {/* Colonna sinistra: "OUR BLOG" e titolo */}
-          <div style={{ flex: '1 1 500px', minWidth: '300px' }}>
-            <p
-              style={{
-                fontFamily: 'Thicccboi, sans-serif',
-                fontWeight: 600,
-                fontSize: '16px',
-                lineHeight: '20px',
-                margin: '0 0 0.5rem',
-                color: '#666'
-              }}
-            >
-              OUR BLOG
-            </p>
-            <h2
-              style={{
-                fontFamily: 'Thicccboi, sans-serif',
-                fontWeight: 500,
-                fontSize: '58px',
-                lineHeight: '65px',
-                margin: 0
-              }}
-            >
+        <div style={headerStyle}>
+          <div style={leftColStyle}>
+            <p style={labelStyle}>OUR BLOG</p>
+            <h2 style={titleStyle}>
               Latest news & <span style={{ color: '#0072F5' }}>articles</span>
             </h2>
           </div>
-
-          {/* Colonna destra: link "Browse all articles" */}
-          <div style={{ flex: '0 0 auto' }}>
-            <a
-              href="#"
-              style={{
-                fontFamily: 'Thicccboi, sans-serif',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '24px',
-                textDecoration: 'none',
-                color: '#171717'
-              }}
-            >
+          <div style={rightColStyle}>
+            <a href="#" style={linkStyle}>
               Browse all articles →
             </a>
           </div>
         </div>
 
-        {/* Sezione card: 1 grande a sinistra, 2 piccole a destra */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.2fr 1fr',
-            gap: '1.5rem'
-          }}
-        >
-          {/* Card grande */}
-          <BigArticleCard />
+        {/* Sezione card */}
+        <div style={gridStyle}>
+          {/* Card grande: mantiene l'immagine di sfondo */}
+          <BigArticleCard isMobile={isMobile} />
 
-          {/* Colonna destra: 2 card più piccole */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Su desktop, le due card piccole vanno a destra; su mobile, le disponiamo sotto */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem'
+            }}
+          >
             <SmallArticleCard
               title="Clever DIY home improvements you can do during the pandemic"
               category="Construction"
@@ -99,9 +128,8 @@ export default function BlogSection() {
   )
 }
 
-/* Card grande con immagine + overlay e pulsante freccia */
-function BigArticleCard() {
-  // Stato hover per la card grande (per ingrandire e scurire l’immagine)
+/* Card grande con immagine di sfondo e overlay */
+function BigArticleCard({ isMobile }) {
   const [hover, setHover] = useState(false)
 
   return (
@@ -118,13 +146,14 @@ function BigArticleCard() {
         transition: 'transform 0.3s ease, box-shadow 0.3s ease'
       }}
     >
-      {/* Immagine di sfondo */}
+      {/* Immagine di sfondo; l'altezza viene adattata in base al breakpoint */}
       <img
         src="/blog.jpg"
         alt="Paint roller"
         style={{
           width: '100%',
-          height: 'auto',
+          height: isMobile ? '300px' : '500px',
+          objectFit: 'cover',
           display: 'block',
           transition: 'opacity 0.3s',
           opacity: hover ? 0.95 : 1
@@ -170,7 +199,7 @@ function BigArticleCard() {
         ↗
       </button>
 
-      {/* Corpo card grande (testo in basso) */}
+      {/* Corpo della card con testo */}
       <div
         style={{
           position: 'absolute',
@@ -194,7 +223,7 @@ function BigArticleCard() {
         >
           12 designers tricks for picking <br /> the perfect home color palette
         </h3>
-        {/* Tag + data */}
+        {/* Tag e data */}
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <span
             style={{
@@ -227,7 +256,7 @@ function BigArticleCard() {
   )
 }
 
-/* Card piccola per articoli sulla destra */
+/* Card piccola per articoli */
 function SmallArticleCard({ title, category, date }) {
   const [hover, setHover] = useState(false)
 
@@ -250,7 +279,6 @@ function SmallArticleCard({ title, category, date }) {
         transform: hover ? 'scale(1.02)' : 'scale(1)'
       }}
     >
-      {/* Titolo */}
       <h3
         style={{
           fontFamily: 'Thicccboi, sans-serif',
@@ -262,7 +290,6 @@ function SmallArticleCard({ title, category, date }) {
       >
         {title}
       </h3>
-      {/* Tag + data */}
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
         <span
           style={{
@@ -290,7 +317,6 @@ function SmallArticleCard({ title, category, date }) {
           {date}
         </span>
       </div>
-      {/* Pulsante freccia (cerchio) */}
       <button
         style={{
           position: 'absolute',
