@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+// src/pages/index.js
 import BlogSection from './components/BlogSection'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
@@ -10,24 +10,11 @@ import RecentWorks from './components/RecentWorks'
 import Services from './components/Services'
 import Testimonials from './components/Testimonials'
 import TrustedBy from './components/TrustedBy'
+import useMediaQuery from '../hooks/useMediaQuery'
 
 export default function HomePage() {
-  const [isMobile, setIsMobile] = useState(() => {
-    // Controlla se siamo sul client per poter usare window
-    if (typeof window !== 'undefined') {
-      return window.innerWidth < 768;
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Se la larghezza è minore di 768px, isMobile diventa true
+  const isMobile = useMediaQuery('(max-width: 767px)')
 
   return (
     <>
@@ -45,5 +32,5 @@ export default function HomePage() {
         <Footer />
       </main>
     </>
-  );
+  )
 }
