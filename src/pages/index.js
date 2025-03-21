@@ -1,4 +1,3 @@
-// src/pages/index.js
 import { useState, useEffect } from 'react'
 import BlogSection from './components/BlogSection'
 import CallToAction from './components/CallToAction'
@@ -13,21 +12,22 @@ import Testimonials from './components/Testimonials'
 import TrustedBy from './components/TrustedBy'
 
 export default function HomePage() {
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => {
+    // Controlla se siamo sul client per poter usare window
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Funzione per controllare la dimensione della finestra
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768) // imposta breakpoint mobile a 768px
+      setIsMobile(window.innerWidth < 768);
     }
 
-    // Esegui il controllo iniziale
-    handleResize()
-    // Aggiungi l'evento resize
-    window.addEventListener('resize', handleResize)
-    // Pulizia dell'evento al unmount del componente
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
@@ -45,5 +45,5 @@ export default function HomePage() {
         <Footer />
       </main>
     </>
-  )
+  );
 }
