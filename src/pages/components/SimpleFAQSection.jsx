@@ -1,33 +1,26 @@
 // src/components/SimpleFAQSection.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function SimpleFAQSection() {
-  // FAQ hardcoded con domande e risposte
-  const faqs = [
-    {
-      question: 'How many years of experience does Builders X have?',
-      answer:
-        'Builders X has over 10 years of experience in the construction industry, delivering high-quality projects to our clients.'
-    },
-    {
-      question: 'How big is your team of contractors?',
-      answer:
-        'Our team consists of more than 50 skilled contractors and professionals, each specialized in different aspects of construction.'
-    },
-    {
-      question: 'How many years of experience does Builders X has?',
-      answer:
-        'We have extensive experience gained through a wide range of projects, from small renovations to large commercial builds.'
-    },
-    {
-      question: 'Do you have case studies of past successful projects?',
-      answer:
-        'Yes, we maintain a portfolio showcasing our completed projects, highlighting the challenges faced and solutions provided.'
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
     }
-  ]
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Dimensioni adattate in base al breakpoint
+  const sectionPadding = isMobile ? '2rem 0' : '4rem 0'
+  const faqLabelFontSize = isMobile ? '14px' : '16px'
+  const titleFontSize = isMobile ? '36px' : '58px'
+  const titleLineHeight = isMobile ? '42px' : '65px'
 
   return (
-    <section style={{ backgroundColor: '#f8f9fb', padding: '4rem 0' }}>
+    <section style={{ backgroundColor: '#f8f9fb', padding: sectionPadding }}>
       <div
         style={{
           maxWidth: '1340px',
@@ -35,37 +28,52 @@ export default function SimpleFAQSection() {
           padding: '0 1rem'
         }}
       >
-        {/* Contenitore per titolo e "FAQS" in alto a destra */}
-        <div style={{ position: 'relative', marginBottom: '2rem' }}>
-          {/* "FAQS" in alto a destra */}
-          <p
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              fontFamily: 'Thicccboi, sans-serif',
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: '20px',
-              color: '#666',
-              margin: 0
-            }}
-          >
-            FAQS
-          </p>
-          {/* Titolo grande */}
+        {/* Header: su desktop, "FAQS" era posizionato in alto a destra; su mobile viene posizionato sopra il titolo e centrato */}
+        <div style={{ marginBottom: isMobile ? '1.5rem' : '2rem', textAlign: isMobile ? 'center' : 'left' }}>
+          {isMobile && (
+            <p
+              style={{
+                fontFamily: 'Thicccboi, sans-serif',
+                fontWeight: 600,
+                fontSize: faqLabelFontSize,
+                lineHeight: '20px',
+                color: '#666',
+                margin: '0 0 0.5rem'
+              }}
+            >
+              FAQS
+            </p>
+          )}
           <h2
             style={{
               fontFamily: 'Thicccboi, sans-serif',
               fontWeight: 500,
-              fontSize: '58px', // "Frequently asked questions"
-              lineHeight: '65px',
+              fontSize: titleFontSize,
+              lineHeight: titleLineHeight,
               margin: 0
             }}
           >
             Frequently asked <br />
             <span style={{ color: '#0072F5' }}>questions</span>
           </h2>
+          {/* Su desktop, posizioniamo il label "FAQS" in alto a destra */}
+          {!isMobile && (
+            <p
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                fontFamily: 'Thicccboi, sans-serif',
+                fontWeight: 600,
+                fontSize: faqLabelFontSize,
+                lineHeight: '20px',
+                color: '#666',
+                margin: 0
+              }}
+            >
+              FAQS
+            </p>
+          )}
         </div>
 
         {/* Elenco FAQ */}
@@ -76,6 +84,7 @@ export default function SimpleFAQSection() {
               index={idx + 1}
               question={item.question}
               answer={item.answer}
+              isMobile={isMobile}
             />
           ))}
         </ul>
@@ -84,14 +93,46 @@ export default function SimpleFAQSection() {
   )
 }
 
+const faqs = [
+  {
+    question: 'How many years of experience does Builders X have?',
+    answer:
+      'Builders X has over 10 years of experience in the construction industry, delivering high-quality projects to our clients.'
+  },
+  {
+    question: 'How big is your team of contractors?',
+    answer:
+      'Our team consists of more than 50 skilled contractors and professionals, each specialized in different aspects of construction.'
+  },
+  {
+    question: 'How many years of experience does Builders X has?',
+    answer:
+      'We have extensive experience gained through a wide range of projects, from small renovations to large commercial builds.'
+  },
+  {
+    question: 'Do you have case studies of past successful projects?',
+    answer:
+      'Yes, we maintain a portfolio showcasing our completed projects, highlighting the challenges faced and solutions provided.'
+  }
+]
+
 /**
- * FAQItem: singolo elemento FAQ con domanda e risposta "hardcoded"
- * - index: numero (1, 2, 3, ecc.)
- * - question: testo della domanda (36px)
+ * FAQItem - singolo elemento FAQ (accordion)
+ * - index: numero (es. "01")
+ * - question: testo della domanda
  * - answer: testo della risposta
+ * - isMobile: booleano per adattare dimensioni e spaziature
  */
-function FAQItem({ index, question, answer }) {
+function FAQItem({ index, question, answer, isMobile }) {
   const [open, setOpen] = useState(false)
+
+  // Dimensioni adattate in base al breakpoint
+  const numberFontSize = isMobile ? '18px' : '22px'
+  const questionFontSize = isMobile ? '24px' : '36px'
+  const questionLineHeight = isMobile ? '30px' : '45px'
+  const answerFontSize = isMobile ? '16px' : '18px'
+  const answerLineHeight = isMobile ? '22px' : '28px'
+  const itemPadding = isMobile ? '0.75rem 0' : '1rem 0'
 
   return (
     <li
@@ -99,32 +140,31 @@ function FAQItem({ index, question, answer }) {
         display: 'flex',
         flexDirection: 'column',
         borderBottom: '1px solid #e0e0e0',
-        padding: '1rem 0',
+        padding: itemPadding,
         cursor: 'pointer'
       }}
       onClick={() => setOpen(!open)}
     >
-      {/* Riga domanda */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {/* Numero in blu (22px) */}
+        {/* Numero */}
         <span
           style={{
             fontFamily: 'Thicccboi, sans-serif',
             fontWeight: 500,
-            fontSize: '22px',
+            fontSize: numberFontSize,
             lineHeight: '33px',
             color: '#0072F5'
           }}
         >
           {String(index).padStart(2, '0')}
         </span>
-        {/* Domanda (36px) */}
+        {/* Domanda */}
         <span
           style={{
             fontFamily: 'Thicccboi, sans-serif',
             fontWeight: 500,
-            fontSize: '36px',
-            lineHeight: '45px',
+            fontSize: questionFontSize,
+            lineHeight: questionLineHeight,
             color: '#333',
             flex: 1
           }}
@@ -136,16 +176,14 @@ function FAQItem({ index, question, answer }) {
           {open ? '–' : '+'}
         </span>
       </div>
-
-      {/* Risposta (visibile se open=true) */}
       {open && (
         <p
           style={{
             marginTop: '1rem',
             fontFamily: 'Thicccboi, sans-serif',
             fontWeight: 400,
-            fontSize: '18px',
-            lineHeight: '28px',
+            fontSize: answerFontSize,
+            lineHeight: answerLineHeight,
             color: '#555'
           }}
         >

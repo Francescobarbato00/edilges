@@ -5,10 +5,23 @@ import Image from 'next/image'
 export default function ServicesHero() {
   // Stato per gestire l'effetto di ingresso
   const [visible, setVisible] = useState(false)
+  // Stato per la responsività
+  const [isMobile, setIsMobile] = useState(false)
+  const [isSmallMobile, setIsSmallMobile] = useState(false)
 
   useEffect(() => {
-    // Quando il componente si monta, settiamo visible a true (fade + slide)
     setVisible(true)
+  }, [])
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      setIsSmallMobile(width < 480)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   // Stili di animazione per l’intero contenitore
@@ -18,8 +31,46 @@ export default function ServicesHero() {
     transition: 'opacity 0.8s ease, transform 0.8s ease'
   }
 
+  // Altezza del blocco di background: 500px su desktop, 300px su mobile, 220px su schermi molto piccoli
+  const backgroundHeight = isMobile ? (isSmallMobile ? '220px' : '300px') : '500px'
+
+  // Riduzione dimensioni del titolo su mobile
+  const titleFontSize = isSmallMobile ? '1.8rem' : isMobile ? '2.2rem' : '3rem'
+  const titleMaxWidth = isMobile ? '100%' : '60%'
+  const titleMargin = isMobile ? '0.5rem 0' : 0
+
+  // Riduzione dimensioni dei bottoni
+  const buttonFontSize = isSmallMobile ? '0.8rem' : isMobile ? '0.9rem' : '1rem'
+  const buttonPadding = isSmallMobile
+    ? '0.5rem 1rem'
+    : isMobile
+    ? '0.65rem 1.25rem'
+    : '0.75rem 1.5rem'
+
+  // Contenitore bottoni: centrato su mobile
+  const buttonContainerStyle = {
+    display: 'flex',
+    gap: '0.75rem',
+    alignItems: 'center',
+    justifyContent: isMobile ? 'center' : 'flex-start'
+  }
+
+  // Modifica della posizione dell'overlay: su mobile l'overlay è centrato
+  const overlayStyle = {
+    position: 'absolute',
+    bottom: isMobile ? '1rem' : '2rem',
+    left: isMobile ? '1rem' : '2rem',
+    right: isMobile ? '1rem' : '2rem',
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    alignItems: isMobile ? 'center' : 'flex-end',
+    justifyContent: isMobile ? 'center' : 'space-between',
+    flexWrap: 'wrap',
+    textAlign: 'center'
+  }
+
   return (
-    <section style={{ backgroundColor: '#f8f9fb', padding: '4rem 0' }}>
+    <section style={{ backgroundColor: '#f8f9fb', padding: isMobile ? '2rem 0' : '4rem 0' }}>
       <div
         style={{
           maxWidth: '1340px',
@@ -32,28 +83,28 @@ export default function ServicesHero() {
           ...containerStyle
         }}
       >
-        {/* Contenitore con sfondo #041A2E e altezza fissa (500px) */}
+        {/* Contenitore con sfondo #041A2E e altezza responsive */}
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: '500px',
+            height: backgroundHeight,
             backgroundColor: '#041A2E',
             borderRadius: '1rem'
           }}
         >
-          {/* Immagine servizi.svg molto più grande (400x400) */}
+          {/* Immagine servizi.svg molto grande, scalata su mobile */}
           <div
             style={{
               position: 'absolute',
-              top: '1rem',
-              right: '1rem',
-              width: '2000px',
-              height: '1000px'
+              top: isMobile ? '-2rem' : '1rem',
+              right: isMobile ? '-2rem' : '1rem',
+              width: isMobile ? '1200px' : '2000px',
+              height: isMobile ? '600px' : '1000px'
             }}
           >
             <Image
-              src="/servizi.svg" // Sostituisci con il tuo file in /public
+              src="/servizi.svg"
               alt="Services illustration"
               layout="fill"
               objectFit="contain"
@@ -61,45 +112,46 @@ export default function ServicesHero() {
           </div>
         </div>
 
-        {/* Testo e bottoni sovrapposti (in basso) */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '2rem',
-            left: '2rem',
-            right: '2rem',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap'
-          }}
-        >
+        {/* Testo e bottoni sovrapposti */}
+        <div style={overlayStyle}>
           {/* Titolo grande */}
           <h1
             style={{
               fontFamily: 'Thicccboi, sans-serif',
-              fontSize: '3rem',
+              fontSize: titleFontSize,
               lineHeight: '1.2',
-              margin: 0,
+              margin: titleMargin,
               color: '#fff',
-              maxWidth: '60%'
+              maxWidth: titleMaxWidth
             }}
           >
             A team of experts <br /> ready to help you
           </h1>
 
           {/* Contenitore bottoni */}
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            {/* Bottone 1 */}
-            <HoverButton label="Get in touch" bgColor="#0072F5" textColor="#fff" />
-            {/* Bottone freccia */}
-            <HoverButton label="↗" bgColor="#0072F5" textColor="#fff" circle />
-            {/* Bottone "Contact us" con bordo bianco */}
+          <div style={buttonContainerStyle}>
+            <HoverButton
+              label="Get in touch"
+              bgColor="#0072F5"
+              textColor="#fff"
+              fontSize={buttonFontSize}
+              padding={buttonPadding}
+            />
+            <HoverButton
+              label="↗"
+              bgColor="#0072F5"
+              textColor="#fff"
+              circle
+              fontSize={buttonFontSize}
+              padding={buttonPadding}
+            />
             <HoverButton
               label="Contact us"
               bgColor="transparent"
               textColor="#fff"
               border="1px solid #fff"
+              fontSize={buttonFontSize}
+              padding={buttonPadding}
             />
           </div>
         </div>
@@ -109,20 +161,24 @@ export default function ServicesHero() {
 }
 
 /**
- * Bottone riutilizzabile con hover "scale up"
- * - label: testo (o simbolo) del bottone
+ * Bottone riutilizzabile con effetto hover "scale up"
+ *
+ * Props:
+ * - label: testo o simbolo del bottone
  * - bgColor: colore di sfondo
- * - textColor: colore testo
+ * - textColor: colore del testo
  * - circle: se true, bottone circolare
  * - border: stile di bordo opzionale
+ * - fontSize: dimensione del font
+ * - padding: padding interno
  */
-function HoverButton({ label, bgColor, textColor, circle, border }) {
+function HoverButton({ label, bgColor, textColor, circle, border, fontSize, padding }) {
   const [hover, setHover] = useState(false)
 
   const style = {
     fontFamily: 'Thicccboi, sans-serif',
-    fontSize: '1rem',
-    padding: circle ? '0.75rem' : '0.75rem 1.5rem',
+    fontSize: fontSize || '1rem',
+    padding: padding || (circle ? '0.75rem' : '0.75rem 1.5rem'),
     borderRadius: '9999px',
     border: border || 'none',
     backgroundColor: bgColor,
