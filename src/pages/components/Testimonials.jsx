@@ -19,7 +19,6 @@ export default function Testimonials() {
   // -- Stili sezione
   const sectionStyle = {
     backgroundColor: '#f8f9fb',
-    // Riduciamo un po' il padding su mobile
     padding: isMobile ? '2rem 0' : '4rem 0'
   }
 
@@ -36,7 +35,8 @@ export default function Testimonials() {
   // -- Header
   const headerStyle = {
     display: 'flex',
-    alignItems: 'flex-start',
+    flexDirection: isMobile ? 'column' : 'row',
+    alignItems: isMobile ? 'center' : 'flex-start',
     justifyContent: isMobile ? 'center' : 'space-between',
     flexWrap: 'wrap',
     gap: '1rem',
@@ -63,7 +63,6 @@ export default function Testimonials() {
   const titleStyle = {
     fontFamily: 'Thicccboi, sans-serif',
     fontWeight: 500,
-    // Riduciamo dimensione e lineHeight su mobile
     fontSize: isMobile ? '36px' : '58px',
     lineHeight: isMobile ? '42px' : '65px',
     margin: 0
@@ -71,7 +70,8 @@ export default function Testimonials() {
 
   // -- Colonna destra: bottone
   const rightColStyle = {
-    flex: '0 0 auto'
+    flex: '0 0 auto',
+    alignSelf: isMobile ? 'center' : 'flex-start'
   }
 
   const buttonStyle = {
@@ -84,7 +84,8 @@ export default function Testimonials() {
     border: 'none',
     backgroundColor: '#0072F5',
     color: '#fff',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    width: isSmallMobile ? '100%' : 'auto'
   }
 
   // -- Grid delle card testimonial
@@ -99,12 +100,34 @@ export default function Testimonials() {
     gap: '1.5rem'
   }
 
+  const testimonials = [
+    {
+      text: 'Nunc vehicula odio neque, eget cursus magna bibendum at. Maecenas vitae felis ante.',
+      name: 'Andy Smith',
+      location: 'Los Angeles, CA'
+    },
+    {
+      text: 'Ut sagittis at odio aliquam tempus odio tellus at ornare nisi quis pulvinar urna.',
+      name: 'Hannah Baker',
+      location: 'Los Angeles, CA'
+    },
+    {
+      text: 'Sed tortor feugiat vulputate nibh amet pharetra quam in a in suspendisse laoreet convallis.',
+      name: 'Liam Spencer',
+      location: 'New York, NY'
+    },
+    {
+      text: 'Aliquet cursus aliquam enim tellus mattis molestie ut enim fermentum nunc tellus.',
+      name: 'Sophie Moore',
+      location: 'San Francisco, CA'
+    }
+  ]
+
   return (
     <section style={sectionStyle}>
       <div style={wrapperStyle}>
         {/* Header */}
         <div style={headerStyle}>
-          {/* Colonna sinistra: Titolo */}
           <div style={leftColStyle}>
             <p style={labelStyle}>TESTIMONIALS</p>
             <h2 style={titleStyle}>
@@ -113,36 +136,23 @@ export default function Testimonials() {
             </h2>
           </div>
 
-          {/* Colonna destra: Bottone */}
           <div style={rightColStyle}>
-            <button style={buttonStyle}>
-              Get a free quote →
-            </button>
+            <button style={buttonStyle}>Get a free quote →</button>
           </div>
         </div>
 
         {/* Container card testimonial */}
         <div style={gridStyle}>
-          <TestimonialCard
-            text="Nunc vehicula odio neque, eget cursus magna bibendum at. Maecenas vitae felis ante."
-            name="Andy Smith"
-            location="Los Angeles, CA"
-          />
-          <TestimonialCard
-            text="Ut sagittis at odio aliquam tempus odio tellus at ornare nisi quis pulvinar urna."
-            name="Hannah Baker"
-            location="Los Angeles, CA"
-          />
-          <TestimonialCard
-            text="Sed tortor feugiat vulputate nibh amet pharetra quam in a in suspendisse laoreet convallis."
-            name="Liam Spencer"
-            location="New York, NY"
-          />
-          <TestimonialCard
-            text="Aliquet cursus aliquam enim tellus mattis molestie ut enim fermentum nunc tellus."
-            name="Sophie Moore"
-            location="San Francisco, CA"
-          />
+          {testimonials.map(({ text, name, location }) => (
+            <TestimonialCard
+              key={name}
+              text={text}
+              name={name}
+              location={location}
+              isMobile={isMobile}
+              isSmallMobile={isSmallMobile}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -151,15 +161,12 @@ export default function Testimonials() {
 
 /**
  * Componente singolo per una card testimonial.
- * - text: testo della recensione
- * - name: nome dell'autore
- * - location: città / stato
  */
-function TestimonialCard({ text, name, location }) {
+function TestimonialCard({ text, name, location, isMobile, isSmallMobile }) {
   const cardStyle = {
     backgroundColor: '#fff',
     borderRadius: '1rem',
-    padding: '2rem',
+    padding: isMobile ? '1.5rem' : '2rem',
     boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
     display: 'flex',
     flexDirection: 'column',
@@ -170,8 +177,8 @@ function TestimonialCard({ text, name, location }) {
   const textStyle = {
     fontFamily: 'Thicccboi, sans-serif',
     fontWeight: 400,
-    fontSize: '18px',
-    lineHeight: '28px',
+    fontSize: isSmallMobile ? '16px' : '18px',
+    lineHeight: isSmallMobile ? '24px' : '28px',
     margin: 0,
     color: '#333'
   }
@@ -179,28 +186,23 @@ function TestimonialCard({ text, name, location }) {
   const nameStyle = {
     fontFamily: 'Thicccboi, sans-serif',
     fontWeight: 500,
-    fontSize: '18px',
-    lineHeight: '28px',
+    fontSize: isMobile ? '16px' : '18px',
+    lineHeight: isMobile ? '24px' : '28px',
     margin: '0 0 0.25rem'
   }
 
   const locationStyle = {
     fontFamily: 'Thicccboi, sans-serif',
     fontWeight: 400,
-    fontSize: '16px',
-    lineHeight: '24px',
+    fontSize: isMobile ? '14px' : '16px',
+    lineHeight: isMobile ? '20px' : '24px',
     margin: 0,
     color: '#666'
   }
 
   return (
     <div style={cardStyle}>
-      {/* Testo */}
-      <p style={textStyle}>
-        {text}
-      </p>
-
-      {/* Nome e location */}
+      <p style={textStyle}>{text}</p>
       <div>
         <h4 style={nameStyle}>{name}</h4>
         <p style={locationStyle}>{location}</p>

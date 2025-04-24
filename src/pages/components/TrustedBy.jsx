@@ -16,8 +16,9 @@ export default function TrustedBy() {
     margin: '0 auto',
     padding: '0 1rem',
     display: 'flex',
-    alignItems: 'flex-start',
-    flexDirection: isMobile ? 'column' : 'row'
+    flexDirection: isMobile ? 'column' : 'row',
+    alignItems: isMobile ? 'center' : 'flex-start',
+    gap: '1rem'
   }
 
   const gridStyle = {
@@ -26,7 +27,8 @@ export default function TrustedBy() {
     gap: '2rem',
     maxWidth: isMobile ? '100%' : '900px',
     marginLeft: isMobile ? '0' : '2rem',
-    marginTop: isMobile ? '2rem' : '0'
+    marginTop: isMobile ? '2rem' : '0',
+    justifyItems: 'center'
   }
 
   return (
@@ -41,14 +43,15 @@ export default function TrustedBy() {
               fontSize: '16px',
               lineHeight: '20px',
               color: '#666',
-              margin: 0
+              margin: 0,
+              textAlign: isMobile ? 'center' : 'left'
             }}
           >
             TRUSTED BY
           </p>
         </div>
 
-        {/* Colonna destra: griglia box più a destra e più grandi */}
+        {/* Colonna destra: griglia di logo card */}
         <div
           style={{
             flex: 1,
@@ -57,12 +60,9 @@ export default function TrustedBy() {
           }}
         >
           <div style={gridStyle}>
-            <LogoCard label="Startup" />
-            <LogoCard label="Institute" />
-            <LogoCard label="Enterprise" />
-            <LogoCard label="Company" />
-            <LogoCard label="Agency" />
-            <LogoCard label="Venture" />
+            {['Startup', 'Institute', 'Enterprise', 'Company', 'Agency', 'Venture'].map(label => (
+              <LogoCard key={label} label={label} isMobile={isMobile} />
+            ))}
           </div>
         </div>
       </div>
@@ -70,27 +70,42 @@ export default function TrustedBy() {
   )
 }
 
-/**
- * Componente singolo per il box: icona + label.
- * Box più grande, con corner arrotondati e ombra leggera.
- */
-function LogoCard({ label }) {
+function LogoCard({ label, isMobile }) {
+  const baseStyle = {
+    backgroundColor: '#fff',
+    borderRadius: '16px',
+    padding: isMobile ? '1.5rem 1rem' : '2rem 1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+    transition: 'box-shadow 0.3s, transform 0.3s',
+    cursor: 'pointer',
+    minWidth: isMobile ? '140px' : '180px',
+    minHeight: isMobile ? '100px' : '120px'
+  }
+
+  const iconStyle = {
+    width: isMobile ? '28px' : '32px',
+    height: isMobile ? '28px' : '32px',
+    marginBottom: isMobile ? '0.5rem' : '0.75rem',
+    backgroundColor: '#e2e2e2',
+    borderRadius: '6px'
+  }
+
+  const labelStyle = {
+    fontFamily: 'Thicccboi, sans-serif',
+    fontWeight: 500,
+    fontSize: isMobile ? '16px' : '18px',
+    lineHeight: isMobile ? '20px' : '24px',
+    color: '#333',
+    textAlign: 'center'
+  }
+
   return (
     <div
-      style={{
-        backgroundColor: '#fff',
-        borderRadius: '16px',
-        minHeight: '120px',
-        minWidth: '180px',
-        padding: '2rem 1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-        transition: 'box-shadow 0.3s, transform 0.3s',
-        cursor: 'pointer'
-      }}
+      style={baseStyle}
       onMouseEnter={e => {
         e.currentTarget.style.boxShadow = '0 8px 15px rgba(0,0,0,0.1)'
         e.currentTarget.style.transform = 'translateY(-2px)'
@@ -100,29 +115,8 @@ function LogoCard({ label }) {
         e.currentTarget.style.transform = 'translateY(0)'
       }}
     >
-      {/* Icona segnaposto */}
-      <div
-        style={{
-          width: '32px',
-          height: '32px',
-          marginBottom: '0.75rem',
-          backgroundColor: '#e2e2e2',
-          borderRadius: '6px'
-        }}
-      />
-      {/* Nome del box */}
-      <span
-        style={{
-          fontFamily: 'Thicccboi, sans-serif',
-          fontWeight: 500,
-          fontSize: '18px',
-          lineHeight: '24px',
-          color: '#333',
-          textAlign: 'center'
-        }}
-      >
-        {label}
-      </span>
+      <div style={iconStyle} />
+      <span style={labelStyle}>{label}</span>
     </div>
   )
 }
